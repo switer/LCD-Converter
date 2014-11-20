@@ -22,11 +22,34 @@ var main = (function() {
 
             this._$thresholdText = document.getElementById('currentThreshold');
             this._$threshold = document.getElementById('threshold');
+            this._$originSizeInfo = document.getElementById('originSizeInfo');
             this._$sizeInfo = document.getElementById('sizeInfo');
+            this._$scalePolicySelector = document.getElementById('scalePolicySelector');
+
 
             this._$thresholdText.innerText = this.threshold;
             this._$threshold.addEventListener('change', this.onUpdateThreshold.bind(this));
+            this._$scalePolicySelector.addEventListener('change', this.onUpdateScalePolicy.bind(this));
             document.getElementById('defaultThreshold').addEventListener('click', this.onResetThreshold.bind(this));
+
+            // default scale policy
+            this._scaleWith = 128;
+            this._scaleHeight = 64;
+        },
+        onUpdateScalePolicy: function (e) {
+            var nextValues = e.target.value;
+            var matches = /(\w+),(\w+)/.exec(nextValues);
+            var width = matches[1];
+            var height = matches[2];
+            if (width !== 'auto') width = Number(width);
+            if (height !== 'auto') height = Number(height);
+
+            this._scaleWith = width;
+            this._scaleHeight = height;
+            this._img.width = this.__originWidth;
+            this._img.height = this.__originHeight;
+            this.setImage(this._img);
+            this.drawInput();
         },
         onResetThreshold: function () {
             this._$threshold.value = 40;
@@ -45,7 +68,12 @@ var main = (function() {
             this._valuePanel.value = "";
         },
         setImage: function (img) {
+            this.__originWidth = img.width;
+            this.__originHeight = img.height;
+
+            this._$originSizeInfo.innerText = img.width + ' x ' + img.height;
             this._img = img;
+            imageScale(img, this._scaleWith, this._scaleHeight);
         },
         drawInput: function(image) {
 
@@ -200,11 +228,6 @@ var main = (function() {
                         alert("Image too large (max size " + MAX_IMAGE_SIZE + "px)");
                         return;
                     }
-                    imageScale(this, 128, 64);
-                    // if (this.width > 128) {
-                    //     this.height = Math.round(this.height*128/this.width)
-                    //     this.width = 128;
-                    // }
                     Processor.setImage(this);
                     Processor.drawInput();
                 };

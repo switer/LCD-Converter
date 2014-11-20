@@ -6,12 +6,12 @@
     <link rel="stylesheet" href="style.css">
 </head>
 
-<body>
+<body class="">
     <section id="dropZone">Drop image here</section>
     <section class="flb-box">
         <div class="images">
             <div class="item">
-                <p>Input:</p>
+                <p>Input: <span id="originSizeInfo"></span></p>
                 <canvas id="input" width="128" height="64"></canvas>
             </div>
 
@@ -19,10 +19,21 @@
                 <p>Output: <span id="sizeInfo"></span></p>
                 <canvas id="output" width="128" height="64"></canvas>
             </div>
+            <div class="item">
+                <p>Scale: </p>
+                    <select name="" class="ui pure button" id="scalePolicySelector">
+                        <option value="128,64" selected>max-with: 128, max-height: 64</option>
+                        <option value="128,auto">max-with: 128, max-height: clip</option>
+                        <option value="auto,64">max-with: clip, max-height: 64</option>
+                    </select>
+            </div>
             <div class="item range">
-                <p>Binarization: <button id="defaultThreshold">default</button></p>
+                <p>Binarization: </p>
                 <div id="currentThreshold"></div>
-                0 <input type="range" min="0" step="5" max="100" id="threshold" value="40"/> 255
+                <span class="dark">
+                        <a href="javascript:;" id="defaultThreshold" class="ui pure button">default</a>
+                </span>
+                0 <input type="range" min="0" step="1" max="100" id="threshold" value="40"/> 255
             </div>
         </div>
         <textarea id="result" class="flb-p1" cols="90" rows="25"></textarea>
