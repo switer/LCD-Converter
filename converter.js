@@ -72,10 +72,10 @@ var main = (function() {
             data = this._contextInput.getImageData(0, 0, this.__imgWidth, this.__imgHeight).data;
             var len = data.length;
             // If color image, invert colors
-            if (!Processor.imageIsMonochrome(this._canvasInput)) {
-                WHITE = 0;
-                BLACK = 255;
-            }
+            // if (!Processor.imageIsMonochrome(this._canvasInput)) {
+            //     WHITE = 0;
+            //     BLACK = 255;
+            // }
             for (var index = 0; index < len; index += 4) {
                 var alpha = data[index + 3];
 
