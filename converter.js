@@ -85,9 +85,11 @@ var main = (function() {
             this.__imgWidth = image.width;
             this.__imgHeight = image.height;
 
+            if (this.__imgWidth > 128) this.__imgWidth = 128; 
+            if (this.__imgHeight > 64) this.__imgHeight = 64; 
+
             this._$sizeInfo.innerText = this.__imgWidth + ' x ' + this.__imgHeight;
 
-            console.log(this.__imgWidth, this.__imgHeight);
             // input
             this._canvasInput.width = this.__imgWidth;
             this._canvasInput.height = this.__imgHeight;
@@ -96,7 +98,7 @@ var main = (function() {
             this._canvasOutput.height = this.__imgHeight;
 
             // input-content
-            this._contextInput.drawImage(image, 0, 0, this.__imgWidth, this.__imgHeight);
+            this._contextInput.drawImage(image, 0, 0, image.width, image.height);
             this.drawOutput();
 
         },
