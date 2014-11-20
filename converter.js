@@ -49,17 +49,16 @@ var main = (function() {
             this.__imgWidth = image.width;
             this.__imgHeight = image.height;
 
-
-            this.__imgHeight = this.__imgHeight > 64 ? 64:this.__imgHeight;
+            console.log(this.__imgWidth, this.__imgHeight);
             // input
-            this._canvasInput.width = image.width;
+            this._canvasInput.width = this.__imgWidth;
             this._canvasInput.height = this.__imgHeight;
             // ouput
-            this._canvasOutput.width = image.width;
+            this._canvasOutput.width = this.__imgWidth;
             this._canvasOutput.height = this.__imgHeight;
 
             // input-content
-            this._contextInput.drawImage(image, 0, 0, this.__imgWidth, image.height);
+            this._contextInput.drawImage(image, 0, 0, this.__imgWidth, this.__imgHeight);
             this.drawOutput();
 
         },
@@ -131,7 +130,45 @@ var main = (function() {
             return resultBuffer;
         }
     };
+    function imageScale (image, maxWidth, maxHeight) {
+        var width = image.width;
+        var height = image.height;
+        var limitScale,
+            scale
 
+        if (maxWidth == 'auto' && maxHeight == 'auto') {
+            // auto size
+        } else if (maxHeight == 'auto' && width >= maxWidth) {
+            height = height * maxWidth / width;
+            width = maxWidth;
+        } else  if (maxWidth == 'auto' && height >= maxHeight) {
+            width = width * maxHeight / height;
+            height = maxHeight;
+        } else if ( (width > maxWidth && (height * maxWidth / width) > maxHeight) || 
+            (height > maxHeight && (width * maxHeight/height) > maxWidth ) ) {
+            limitScale = maxWidth/maxHeight;
+            scale = width/height;
+
+            if (scale > limitScale) {
+                width = maxWidth;
+                height = maxWidth/scale;
+            } else {
+                height = maxHeight;
+                width = maxHeight*scale;
+            }
+        } else if (width > maxWidth) {
+            height *= maxWidth/width;
+            width = maxWidth;
+        } else if (height > maxHeight) {
+            width *= maxHeight/height;
+            height = maxHeight;
+        }
+        height = Math.floor(height);
+        width = Math.floor(width);
+
+        image.width = width;
+        image.height = height;
+    }
 
     function fileHandler(event) {
         var files = event.dataTransfer.files,
@@ -153,10 +190,11 @@ var main = (function() {
                         alert("Image too large (max size " + MAX_IMAGE_SIZE + "px)");
                         return;
                     }
-                    if (this.width > 128) {
-                        this.height = Math.round(this.height*128/this.width)
-                        this.width = 128;
-                    }
+                    imageScale(this, 128, 64);
+                    // if (this.width > 128) {
+                    //     this.height = Math.round(this.height*128/this.width)
+                    //     this.width = 128;
+                    // }
                     Processor.setImage(this);
                     Processor.drawInput();
                 };
