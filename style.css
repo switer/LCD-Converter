@@ -26,6 +26,7 @@ body {
     border: 0;
     outline: 0;
 }
+#currentThreshold {text-align: center;}
 
 .images {margin-right: 50px;}
     .images .item {margin-top: 40px}

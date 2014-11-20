@@ -17,18 +17,26 @@ var main = (function() {
             this._contextOutput = this._canvasOutput.getContext("2d");
             this._valuePanel = document.getElementById("result");
             this._img = null;
+
             this.threshold = Math.round(255 * .4);
+
+            this._$thresholdText = document.getElementById('currentThreshold');
             this._$threshold = document.getElementById('threshold');
+            this._$sizeInfo = document.getElementById('sizeInfo');
+
+            this._$thresholdText.innerText = this.threshold;
             this._$threshold.addEventListener('change', this.onUpdateThreshold.bind(this));
             document.getElementById('defaultThreshold').addEventListener('click', this.onResetThreshold.bind(this));
         },
         onResetThreshold: function () {
             this._$threshold.value = 40;
             this.threshold = Math.round(255 * .4);
+            this._$thresholdText.innerText = this.threshold;
             this.drawInput();
         },
         onUpdateThreshold: function (e) {
             this.threshold = Math.round(255 * parseInt(e.target.value)/100);
+            this._$thresholdText.innerText = this.threshold;
             this.drawInput();
         },
         clearData: function() {
@@ -48,6 +56,8 @@ var main = (function() {
             this.clearData();
             this.__imgWidth = image.width;
             this.__imgHeight = image.height;
+
+            this._$sizeInfo.innerText = this.__imgWidth + ' x ' + this.__imgHeight;
 
             console.log(this.__imgWidth, this.__imgHeight);
             // input
