@@ -1,7 +1,7 @@
 LCD-Converter
 =======================
 
-Convert images to Binary C-array for Arduino LCDs. (Online Converter)[http://switer.github.io/LCD-Converter/]
+Convert images to Binary C-array for Arduino LCDs. [Online Converter](http://switer.github.io/LCD-Converter/)
 
 
 ### Online Convert
