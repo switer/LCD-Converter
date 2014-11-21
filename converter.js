@@ -36,6 +36,13 @@ var main = (function() {
             this._scaleWith = 128;
             this._scaleHeight = 64;
         },
+        bitLenghtFixed: function (num, len, after) {
+            var reg = '0{%s}$';
+            if (after) {
+                reg = '^0{%s}';
+            }
+            return '00000000'.substr(0, len).replace(new RegExp(reg.replace('%s', num.toString().length)), num);
+        },
         onUpdateScalePolicy: function (e) {
             var nextValues = e.target.value;
             var matches = /(\w+),(\w+)/.exec(nextValues);
@@ -88,7 +95,8 @@ var main = (function() {
             if (this.__imgWidth > 128) this.__imgWidth = 128; 
             if (this.__imgHeight > 64) this.__imgHeight = 64; 
 
-            this._$sizeInfo.innerText = this.__imgWidth + ' x ' + this.__imgHeight;
+            this._$sizeInfo.innerText = (this.__imgWidth % 8 == 8 ? this.__imgWidth: this.__imgWidth + (8 - this.__imgWidth%8))  
+                                            + ' x ' + this.__imgHeight;
 
             // input
             this._canvasInput.width = this.__imgWidth;
@@ -108,8 +116,9 @@ var main = (function() {
                 WHITE = 255,
                 BLACK = 0;
 
-            imageData = this._contextOutput.createImageData(this.__imgWidth, this.__imgHeight);
-            data = this._contextInput.getImageData(0, 0, this.__imgWidth, this.__imgHeight).data;
+            data = this._contextInput.getImageData(0, 0, this.__imgWidth, this.__imgHeight);
+            imageData = this._contextOutput.createImageData(data);
+            data = data.data;
             var len = data.length;
             // If color image, invert colors
             // if (!Processor.imageIsMonochrome(this._canvasInput)) {
@@ -151,16 +160,20 @@ var main = (function() {
         writeByteArray: function() {
             var imgData = this._contextOutput.getImageData(0, 0, this.__imgWidth, this.__imgHeight).data,
                 len = imgData.length,
+                width = this.__imgWidth,
                 bit = 0,
                 cols = 0,
                 binary = '',
                 resultBuffer = '';
-
             for (var i = 0, index = 0; index < len; i++, index += 4) {
                 bit = (imgData[index] === 255) ? 0 : 1;
                 binary += bit;
-                if (binary.length === 8) {
+                if (binary.length === 8 || (index/4)%width  === width - 1 ) {
+                    if (binary.length < 8) {
+                        binary = this.bitLenghtFixed(binary, 8, true);
+                    }
                     resultBuffer += 'B' + binary + ','
+                    // resultBuffer += '0x' + this.bitLenghtFixed(parseInt(binary, 2).toString(16), 2) + ','
                     binary = '';
                     cols++;
                 }
