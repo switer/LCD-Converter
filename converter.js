@@ -95,8 +95,14 @@ var main = (function() {
             if (this.__imgWidth > 128) this.__imgWidth = 128; 
             if (this.__imgHeight > 64) this.__imgHeight = 64; 
 
-            this._$sizeInfo.innerText = (this.__imgWidth % 8 == 8 ? this.__imgWidth: this.__imgWidth + (8 - this.__imgWidth%8))  
-                                            + ' x ' + this.__imgHeight;
+            // this._$sizeInfo.innerText = (this.__imgWidth % 8 == 8 ? this.__imgWidth: this.__imgWidth + (8 - this.__imgWidth%8))  
+            //                                 + ' x ' + this.__imgHeight;
+
+            this._$sizeInfo.innerText = this.__imgWidth 
+                                        + '(complementing '
+                                        + (this.__imgWidth % 8 == 0 ? this.__imgWidth: this.__imgWidth + (8 - this.__imgWidth%8))
+                                        + ')'
+                                        + ' x ' + this.__imgHeight;
 
             // input
             this._canvasInput.width = this.__imgWidth;
